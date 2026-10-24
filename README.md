@@ -23,6 +23,8 @@ tags:
 
 # 🧬 Talk to a Cell
 
+**Try it:** https://huggingface.co/spaces/SoulFireMage/talk-to-a-cell
+
 Chat in plain English with **Cell2Sentence (C2S-Scale)**, a language model from the van Dijk
 Lab (Yale), Google Research and Google DeepMind that learned to read cells from over 57 million
 real ones. C2S's native language is the "cell sentence": a cell's gene names, ordered from
