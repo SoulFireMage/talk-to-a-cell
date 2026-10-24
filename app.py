@@ -6,8 +6,9 @@ How a chat turn flows:
   2. Gradio event -> run_plan() on the server -> C2S on ZeroGPU (visitor's GPU quota).
   3. Browser JS -> OpenRouter ("explain"), with the visitor's own key.
 
-The OpenRouter key is only ever an input to JS-only events, so it never reaches the
-server. Expert mode needs no key at all: it calls C2S directly.
+The OpenRouter key is used only inside browser-side JS hooks, which blank it before
+their results go to the server (and the server refuses any request that carries one).
+Expert mode needs no key at all: it calls C2S directly.
 """
 
 import json
@@ -128,7 +129,7 @@ async (msg, history, key, model, noReason) => {
   const T = window.TTAC;
   const done = (h, plan) => ["", h, "", "", false, plan || ""];
   try {
-  msg = (msg || "").trim().replace(/^[^A-Za-z0-9"']+\s/, "");
+  msg = (msg || "").trim().replace(/^[^A-Za-z0-9"']+\\s/, "");
   history = Array.isArray(history) ? history.slice() : [];
   if (!msg) return done(history);
   const earlier = T.historyText(history);
