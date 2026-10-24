@@ -1,0 +1,6 @@
+torch==2.8.0
+transformers>=4.56,<5
+accelerate
+sentencepiece
+protobuf
+spaces
