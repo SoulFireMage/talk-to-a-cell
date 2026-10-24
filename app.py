@@ -12,6 +12,7 @@ Expert mode needs no key at all: it calls C2S directly.
 """
 
 import json
+import urllib.request
 from pathlib import Path
 
 import gradio as gr
@@ -20,7 +21,21 @@ import c2s_core
 import orchestrator_prompts
 
 HERE = Path(__file__).resolve().parent
-EXAMPLES = json.loads((HERE / "data" / "example_cells.json").read_text())
+# The Hugging Face Space is uploaded without the 40 KB data file, so fall back to the
+# copy in the GitHub repo, pinned to a commit so it can't change underneath us.
+EXAMPLES_URL = ("https://raw.githubusercontent.com/SoulFireMage/talk-to-a-cell/"
+                "21a4d3474493e76c39fd9663db56f65884ae3238/data/example_cells.json")
+
+
+def _load_examples() -> dict:
+    path = HERE / "data" / "example_cells.json"
+    if path.exists():
+        return json.loads(path.read_text())
+    with urllib.request.urlopen(EXAMPLES_URL, timeout=30) as response:
+        return json.loads(response.read())
+
+
+EXAMPLES = _load_examples()
 CELLS = EXAMPLES["cells"]
 DEFAULT_MODEL = "deepseek/deepseek-v4.1-flash"
 
