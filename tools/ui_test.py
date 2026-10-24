@@ -33,7 +33,8 @@ with sync_playwright() as p:
     errors = []
     page.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
     page.goto(URL)
-    page.wait_for_selector("text=Talk to a Cell")
+    page.wait_for_selector("text=Talk to a Cell", timeout=60_000)
+    page.wait_for_function("() => !!window.TTAC", timeout=60_000)
     page.screenshot(path=f"{SHOTS}/01-start.png")
 
     # 1. No key: should explain what to do.

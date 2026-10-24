@@ -141,6 +141,8 @@ UNDERSTAND_JS = """
 async (msg, history, key, model, noReason) => {
   // Returns [msg, history, key, model, noReason, plan] to match the inputs; the key slot
   // is always blanked so it never reaches the server.
+  // Gradio injects the page's <script> a moment after load; wait for it (up to 10 s).
+  for (let i = 0; i < 100 && !window.TTAC; i++) await new Promise((r) => setTimeout(r, 100));
   const T = window.TTAC;
   const done = (h, plan) => ["", h, "", "", false, plan || ""];
   try {
@@ -192,6 +194,8 @@ async (history, plan, result, key, model, noReason) => {
   // Returns [history, plan, result, key, model, noReason] to match the inputs, key blanked.
   const done = (h) => [h, "", "", "", "", false];
   if (!plan || !result) return done(history);
+  // Gradio injects the page's <script> a moment after load; wait for it (up to 10 s).
+  for (let i = 0; i < 100 && !window.TTAC; i++) await new Promise((r) => setTimeout(r, 100));
   const T = window.TTAC;
   try {
   history = history.slice();
